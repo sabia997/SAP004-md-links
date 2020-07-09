@@ -1,4 +1,30 @@
 {
   "name": "md-links",
-  "version": "0.1.0"
+  "version": "0.1.0",
+  "description": "## Índice",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "bin": {
+    "md-links": "./cli.js"
+  },
+  "scripts": {
+    "test": "md-links"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sabia997/SAP004-md-links.git"
+  },
+  "keywords": [
+    "links",
+    "validação",
+    "teste"
+  ],
+  "author": "Sabrina Aparecida Silva Martins",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sabia997/SAP004-md-links/issues"
+  },
+  "homepage": "https://github.com/sabia997/SAP004-md-links#readme"
 }
