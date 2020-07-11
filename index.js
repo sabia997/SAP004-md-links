@@ -1,13 +1,16 @@
+const valida = require('./valida.js');
 const fs = require('fs');
+let parse = require('url-parse')
 
-const pasta = "./README.md";
 
 const mdlinks = (caminho) => {
+
   return new Promise((aceito, rejeitado) =>{
   let stringArquivo = '';
   const regExAll = /\[(.*?\]\(http[s]?:[A-Za-z0-9/,-_#.]*)/g;
   const regExText = /\[(.*?)\]/g;
   const regExLink = /http[s]?:[A-Za-z0-9/,-_#.]*/g;
+
 
   fs.readFile(caminho, "utf8", (err, data) => {
   if(err){
@@ -19,8 +22,12 @@ const mdlinks = (caminho) => {
   const temLink = stringArquivo.match(regExLink)
   if (temLink !== null){
     const teste = (arrayComLinks[0]).match(regExText);
-    //console.log(arrayComLinks)
     let arrayDeObj = []; 
+    let arrayHTTP =[];
+    let arrayHTTPS = [];
+    let onlyhttps = ''
+    let onlyhttp =''
+  
     for (const key in arrayComLinks) {
       let objetos = {};
       objetos['text'] = (arrayComLinks[key]).match(regExText)[0]
@@ -28,7 +35,24 @@ const mdlinks = (caminho) => {
       objetos['pasta'] = caminho;
       arrayDeObj.push(objetos);
     }
-    aceito(arrayDeObj)
+    for (const key in arrayDeObj){
+      url = parse( arrayDeObj[key].href, true);
+       if ( url.protocol === 'https:'){
+         onlyhttps = arrayDeObj[key];
+         arrayHTTPS.push(onlyhttps);
+      } else if (url.protocol === 'http:') {
+        onlyhttp = arrayDeObj[key]
+        arrayHTTP.push(onlyhttp);
+      } 
+    }
+    const arrr = arrayHTTPS.map((element) => {
+    return  valida.validahttps(element)
+
+    })
+    const arrr2 = arrayHTTP.map((element) => {
+      return  valida.validahttp(element)
+      })
+    aceito(Promise.all(arrr, arrr2))
   } else {
     const naofoi = 'Não foi dessa vez, não há links neste arquivo!'
     rejeitado(naofoi)

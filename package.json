@@ -26,5 +26,8 @@
   "bugs": {
     "url": "https://github.com/sabia997/SAP004-md-links/issues"
   },
-  "homepage": "https://github.com/sabia997/SAP004-md-links#readme"
+  "homepage": "https://github.com/sabia997/SAP004-md-links#readme",
+  "dependencies": {
+    "url-parse": "^1.4.7"
+  }
 }
