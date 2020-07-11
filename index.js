@@ -3,7 +3,7 @@ const fs = require('fs');
 let parse = require('url-parse')
 
 
-const mdlinks = (caminho) => {
+const mdlinks = (caminho, options) => {
 
   return new Promise((aceito, rejeitado) =>{
   let stringArquivo = '';
@@ -52,7 +52,12 @@ const mdlinks = (caminho) => {
     const arrr2 = arrayHTTP.map((element) => {
       return  valida.validahttp(element)
       })
-    aceito(Promise.all(arrr, arrr2))
+      if ( options.includes('--validate')){
+        aceito(Promise.all(arrr, arrr2))
+      } else {
+        aceito(arrayDeObj)
+      }
+
   } else {
     const naofoi = 'Não foi dessa vez, não há links neste arquivo!'
     rejeitado(naofoi)
