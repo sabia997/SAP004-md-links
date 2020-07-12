@@ -43,7 +43,7 @@ function mdlinks(caminho, options) {
         const arrr = arrayHTTPS.map((element) => valida.validahttps(element));
         const arrr2 = arrayHTTP.map((element) => valida.validahttp(element));
         if (options.includes('--validate')) {
-          aceito(Promise.all(arrr, arrr2));
+          aceito(Promise.all(arrr.concat(arrr2)));
         } else {
           aceito(arrayDeObj);
         }
