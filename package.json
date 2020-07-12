@@ -29,5 +29,10 @@
   "homepage": "https://github.com/sabia997/SAP004-md-links#readme",
   "dependencies": {
     "url-parse": "^1.4.7"
+  },
+  "devDependencies": {
+    "eslint": "^7.4.0",
+    "eslint-config-airbnb-base": "^14.2.0",
+    "eslint-plugin-import": "^2.22.0"
   }
 }
