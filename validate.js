@@ -1,8 +1,7 @@
 const http = require('http');
 const https = require('https');
-// const { promises } = require('dns');
 
-const valida = {
+const validate = {
   validahttps: function valida(objeto) {
     return new Promise((aceito) => {
       https.get(objeto.href, (res) => {
@@ -27,4 +26,4 @@ const valida = {
   },
 };
 
-module.exports = valida;
+module.exports = validate;

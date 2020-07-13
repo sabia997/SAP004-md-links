@@ -1,34 +1,35 @@
 const fs = require('fs');
 const parse = require('url-parse');
-const valida = require('./valida.js');
+const validate = require('./validate.js');
 
-function mdlinks(caminho, options) {
-  return new Promise((aceito, rejeitado) => {
-    let stringArquivo = '';
+function mdlinks(archive, options) {
+  return new Promise((accepted, rejected) => {
+    let stringWithDoc = '';
     const regExAll = /\[(.*?\]\(http[s]?:[A-Za-z0-9/,-_#.]*)/g;
     const regExText = /\[(.*?)\]/g;
     const regExLink = /http[s]?:[A-Za-z0-9/,-_#.]*/g;
 
-    fs.readFile(caminho, 'utf8', (err, data) => {
+    fs.readFile(archive, 'utf8', (err, data) => {
       if (err) {
-        console.log(err);
+        const errorMessage = 'Erro!\nArquivo não existe';
+        console.log(errorMessage);
       } else {
-        stringArquivo = data.replace(/(\n)/gm, ' ');
+        stringWithDoc = data.replace(/(\n)/gm, ' ');
       }
-      const arrayComLinks = stringArquivo.match(regExAll);
-      const temLink = stringArquivo.match(regExLink);
-      if (temLink !== null) {
+      const arrayAllInfo = stringWithDoc.match(regExAll);
+      const onlyLinks = stringWithDoc.match(regExLink);
+      if (onlyLinks !== null) {
         const arrayDeObj = [];
         const arrayHTTP = [];
         const arrayHTTPS = [];
         let onlyhttps = '';
         let onlyhttp = '';
-        for (let i = 0; i < arrayComLinks.length; i += 1) {
-          const objetos = {};
-          objetos.text = (arrayComLinks[i]).match(regExText)[0];
-          objetos.href = (arrayComLinks[i]).match(regExLink)[0];
-          objetos.pasta = caminho;
-          arrayDeObj.push(objetos);
+        for (let i = 0; i < arrayAllInfo.length; i += 1) {
+          const objectsInfo = {};
+          objectsInfo.text = (arrayAllInfo[i]).match(regExText)[0];
+          objectsInfo.href = (arrayAllInfo[i]).match(regExLink)[0];
+          objectsInfo.pasta = archive;
+          arrayDeObj.push(objectsInfo);
         }
         for (let i = 0; i < arrayDeObj.length; i += 1) {
           const url = parse(arrayDeObj[i].href, true);
@@ -40,16 +41,16 @@ function mdlinks(caminho, options) {
             arrayHTTP.push(onlyhttp);
           }
         }
-        const arrr = arrayHTTPS.map((element) => valida.validahttps(element));
-        const arrr2 = arrayHTTP.map((element) => valida.validahttp(element));
+        const onlyhttpsArray = arrayHTTPS.map((element) => validate.validahttps(element));
+        const onlyhttpArray = arrayHTTP.map((element) => validate.validahttp(element));
         if (options.includes('--validate')) {
-          aceito(Promise.all(arrr.concat(arrr2)));
+          accepted(Promise.all(onlyhttpsArray.concat(onlyhttpArray)));
         } else {
-          aceito(arrayDeObj);
+          accepted(arrayDeObj);
         }
       } else {
-        const naofoi = 'Não foi dessa vez, não há links neste arquivo!\n verifique se está na pasta do arquivo';
-        rejeitado(naofoi);
+        const error = 'Desculpe!\nVerifique se você indicou corretamente a pasta onde o arquivo se encontra';
+        rejected(error);
       }
     });
   });
