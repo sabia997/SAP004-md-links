@@ -45,12 +45,12 @@ describe('Teste: Retrono da função mdLinks', () => {
   it('is a function', () => {
     expect(typeof mdLinks).toBe('function');
   });
-  test('Sem o parametro validate, esperamos os objetos sem os elementos de validação', () => {
+  test('Sem o parametro validate, esperamos os objetos sem a validação', () => {
     return mdLinks('./TESTE.md', 'any').then((data) => {
       expect(data).toEqual(expetedWithoutValidate);
     });
   });
-  test('Com o parametro validate, esperamos os objetos com os elementos de validação', () => {
+  test('Com o parametro validate, esperamos os objetos com a validação', () => {
     return mdLinks('./TESTE.md', '--validate').then((data) => {
       expect(data).toEqual(expetedWithValidate);
     });

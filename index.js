@@ -2,16 +2,16 @@ const fs = require('fs');
 const parse = require('url-parse');
 const validate = require('./validate.js');
 
-function mdlinks(archive, options) {
+function mdlinks(path, options) {
   return new Promise((accepted, rejected) => {
     let stringWithDoc = '';
     const regExAll = /\[(.*?\]\(http[s]?:[A-Za-z0-9/,-_#.]*)/g;
     const regExText = /\[(.*?)\]/g;
     const regExLink = /http[s]?:[A-Za-z0-9/,-_#.]*/g;
 
-    fs.readFile(archive, 'utf8', (err, data) => {
+    fs.readFile(path, 'utf8', (err, data) => {
       if (err) {
-        const errorMessage = 'Erro!\nArquivo não existe';
+        const errorMessage = 'Não encontramos o arquivo!';
         console.log(errorMessage);
       } else {
         stringWithDoc = data.replace(/(\n)/gm, ' ');
@@ -28,7 +28,7 @@ function mdlinks(archive, options) {
           const objectsInfo = {};
           objectsInfo.text = (arrayAllInfo[i]).match(regExText)[0];
           objectsInfo.href = (arrayAllInfo[i]).match(regExLink)[0];
-          objectsInfo.pasta = archive;
+          objectsInfo.pasta = path;
           arrayDeObj.push(objectsInfo);
         }
         for (let i = 0; i < arrayDeObj.length; i += 1) {
@@ -49,7 +49,7 @@ function mdlinks(archive, options) {
           accepted(arrayDeObj);
         }
       } else {
-        const error = 'Desculpe!\nVerifique se você indicou corretamente a pasta onde o arquivo se encontra';
+        const error = 'Verifique se você indicou corretamente a pasta onde o arquivo se encontra\nForma correta: ./caminho/NOME_DO_ARQUIVO.md';
         rejected(error);
       }
     });
