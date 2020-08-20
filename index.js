@@ -1,23 +1,21 @@
 const fs = require('fs');
 const parse = require('url-parse');
 const validate = require('./validate.js');
+const regularExpressions = require('./regex.js')
+
 
 function mdlinks(path, options) {
   return new Promise((accepted, rejected) => {
     let stringWithDoc = '';
-    const regExAll = /\[(.*?\]\(http[s]?:[A-Za-z0-9/,-_#.]*)/g;
-    const regExText = /\[(.*?)\]/g;
-    const regExLink = /http[s]?:[A-Za-z0-9/,-_#.]*/g;
-
     fs.readFile(path, 'utf8', (err, data) => {
       if (err) {
-        const errorMessage = 'Não encontramos o arquivo!';
-        console.log(errorMessage);
+        console.log(err);
       } else {
         stringWithDoc = data.replace(/(\n)/gm, ' ');
       }
-      const arrayAllInfo = stringWithDoc.match(regExAll);
-      const onlyLinks = stringWithDoc.match(regExLink);
+      const arrayAllInfo = stringWithDoc.match(regularExpressions.allInfo);
+      const onlyLinks = stringWithDoc.match(regularExpressions.onlyLink);
+
       if (onlyLinks !== null) {
         const arrayDeObj = [];
         const arrayHTTP = [];
@@ -26,8 +24,8 @@ function mdlinks(path, options) {
         let onlyhttp = '';
         for (let i = 0; i < arrayAllInfo.length; i += 1) {
           const objectsInfo = {};
-          objectsInfo.text = (arrayAllInfo[i]).match(regExText)[0];
-          objectsInfo.href = (arrayAllInfo[i]).match(regExLink)[0];
+          objectsInfo.text = (arrayAllInfo[i]).match(regularExpressions.onlyText)[0];
+          objectsInfo.href = (arrayAllInfo[i]).match(regularExpressions.onlyLink)[0];
           objectsInfo.pasta = path;
           arrayDeObj.push(objectsInfo);
         }
