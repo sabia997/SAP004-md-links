@@ -1,13 +1,11 @@
 const fs = require('fs');
 const parse = require('url-parse');
 const validate = require('./validate.js');
+const regularExpression = require('./regex');
 
 function mdlinks(path, options) {
   return new Promise((accepted, rejected) => {
     let stringWithDoc = '';
-    const regExAll = /\[(.*?\]\(http[s]?:[A-Za-z0-9/,-_#.]*)/g;
-    const regExText = /\[(.*?)\]/g;
-    const regExLink = /http[s]?:[A-Za-z0-9/,-_#.]*/g;
 
     fs.readFile(path, 'utf8', (err, data) => {
       if (err) {
@@ -16,8 +14,8 @@ function mdlinks(path, options) {
       } else {
         stringWithDoc = data.replace(/(\n)/gm, ' ');
       }
-      const arrayAllInfo = stringWithDoc.match(regExAll);
-      const onlyLinks = stringWithDoc.match(regExLink);
+      const arrayAllInfo = stringWithDoc.match(regularExpression.regExAll);
+      const onlyLinks = stringWithDoc.match(regularExpression.regExLink);
       if (onlyLinks !== null) {
         const arrayDeObj = [];
         const arrayHTTP = [];
@@ -26,8 +24,8 @@ function mdlinks(path, options) {
         let onlyhttp = '';
         for (let i = 0; i < arrayAllInfo.length; i += 1) {
           const objectsInfo = {};
-          objectsInfo.text = (arrayAllInfo[i]).match(regExText)[0];
-          objectsInfo.href = (arrayAllInfo[i]).match(regExLink)[0];
+          objectsInfo.text = (arrayAllInfo[i]).match(regularExpression.regExText)[0];
+          objectsInfo.href = (arrayAllInfo[i]).match(regularExpression.regExLink)[0];
           objectsInfo.pasta = path;
           arrayDeObj.push(objectsInfo);
         }
